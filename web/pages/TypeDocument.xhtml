@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:head>
+
+    </h:head>
+    <h:body>
+        <ui:composition template="../templates/template.xhtml">
+            <ui:define name="title">Type de documents</ui:define>
+            <ui:define name="content">
+                <div class="ui-g">
+                    <div class="ui-md-2 ui-g-2">
+                        <h:form>
+                            <p:commandButton value="Ajouter" oncomplete="PF('typeDocDialog').show()" icon="pi pi-plus"></p:commandButton>
+                        </h:form>
+                    </div>
+                </div>
+                <div class="ui-g">
+                    <f:view>
+
+
+                        <h:form id="form_list">
+                            <p:growl id="msge_2" showDetail="true" />
+                            <h1><h:outputText value="Liste des types de documents"/></h1>
+                            <p:dataTable value="#{typeDocumentController.listTypeDocs}" var="item" id="dt_typeDoc">
+
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Libellé"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.nom}"/>
+                                </p:column>
+                                <p:column style="width:50px;text-align: center">
+                                    <p:commandButton  icon="pi pi-pencil" title="Edit" oncomplete="PF('typeDocDialog').show()" update="form_add">
+                                        <f:setPropertyActionListener value="#{item}" target="#{typeDocumentController.typeDoc}" />
+                                    </p:commandButton>
+                                </p:column>
+                                <p:column style="width:50px;text-align: center">
+                                    <p:commandButton  icon="pi pi-trash" title="Supprimer" >
+                                        <f:setPropertyActionListener value="#{item}" target="#{typeDocumentController.typeDoc}"  />
+                                        <p:confirm header="Confirmation" message="Etes vous sur de supprimer cette ligne?" icon="pi pi-exclamation-triangle" />
+                                    </p:commandButton>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="OUI" type="button" action="#{typeDocumentController.supprimer()}" update="form_list,msge_2" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                                        <p:commandButton value="NON" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                                    </p:confirmDialog>
+                                </p:column>
+                                <p:column style="width:50px;text-align: center">
+                                    <p:commandButton  icon="pi pi-search" title="details">
+                                        <f:setPropertyActionListener value="#{item}" target="#{typeDocumentController.typeDoc}" />
+                                    </p:commandButton>
+                                </p:column>
+
+                            </p:dataTable>
+                        </h:form>
+                    </f:view>
+
+                </div>
+
+
+                <p:dialog appendTo="@(body)" height="500px" width="600px" header="Type de document" widgetVar="typeDocDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+
+                    <f:view>
+
+
+                        <h:form id="form_add">
+                            <p:growl id="msge" showDetail="true" />
+                            <p:panelGrid columns="2">
+                                <p:outputLabel value="Libellé:" for="nom" />
+                                <p:inputText id="nom" value="#{typeDocumentController.typeDoc.nom}" title="Nom" />
+                                <p:commandButton value="Enregistrer" icon="pi pi-save" action="#{typeDocumentController.createTypeDocument()}" oncomplete="PF('typeDocDialog').hide()" update="form_list:dt_typeDoc,form_add"></p:commandButton>
+                                <p:commandButton value="Fermer" oncomplete="PF('typeDocDialog').hide()"></p:commandButton>
+
+
+
+                            </p:panelGrid>
+                        </h:form>
+                    </f:view>
+                </p:dialog>
+
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
